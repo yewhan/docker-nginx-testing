@@ -1,0 +1,83 @@
+version: "3"
+
+services:
+
+    load_balancer:
+        image: load_balancer
+        restart: always
+        ports:
+            - "8080:80"
+        volumes:
+            - ./webtest/lb:/web
+            #- ./lbdefault.conf:/etc/nginx/modules-enabled/default.conf
+            - ./lbdefault.conf:/etc/nginx/nginx.conf
+        depends_on:
+            - php1
+            - php2
+            - php3
+            - db
+            - web1
+            - web2
+            - web3
+
+    web1:
+        image: web1
+        restart: always
+        ports:
+            - "8081:80"
+        volumes:
+            - ./webtest/w1:/web
+            - ./default.conf:/etc/nginx/modules-enabled/default.conf
+        depends_on:
+            - php1
+            - db
+
+    web2:
+        image: web2
+        restart: always
+        ports:
+            - "8082:80"
+        volumes:
+            - ./webtest/w2:/web
+            - ./default.conf:/etc/nginx/modules-enabled/default.conf
+        depends_on:
+            - php2
+            - db
+
+    web3:
+        image: web3
+        restart: always
+        ports:
+            - "8083:80"
+        volumes:
+            - ./webtest/w3:/web
+            - ./default.conf:/etc/nginx/modules-enabled/default.conf
+        depends_on:
+            - php3
+            - db
+    
+    php1:
+        image: php:fpm
+        volumes:
+            - ./webtest/w1:/web
+
+    php2:
+        image: php:fpm
+        volumes:
+            - ./webtest/w2:/web
+
+    php3:
+        image: php:fpm
+        volumes:
+            - ./webtest/w3:/web
+    
+    db:
+        image: mysql:latest
+        environment:
+            - MYSQL_ROOT_PASSWORD=abcd1234
+        restart: always
+        volumes:
+            - db_vol:/var/lib/mysql
+
+volumes:
+    db_vol:
