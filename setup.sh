@@ -1,15 +1,5 @@
 #!/bin/bash
 
-apt -y update
-apt -y upgrade
-apt -y install openssh-server
-apt -y install net-tools
-apt -y install nginx
-apt -y install docker.io
-apt -y install docker-compose
-apt -y install curl
-apt -y autoremove
-
 if [ -d "~/webtest" ]
 then
     rm -r webtest
@@ -46,8 +36,8 @@ echo -e "FROM nginx:alpine \nCOPY /index.htm /usr/share/nginx/html/index.html \n
 docker build -t web3 .
 
 
-systemctl restart nginx
-systemctl restart docker
+# systemctl restart nginx
+# systemctl restart docker
 
-cd ~
-#docker-compose up
+# cd ~
+# #docker-compose up
